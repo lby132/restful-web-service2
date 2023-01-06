@@ -1,6 +1,8 @@
 package com.example.restfulwebservice2.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,14 +28,22 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable int id) {
+    public EntityModel<User> retrieveUser(@PathVariable int id) {
         User user = service.findOne(id);
 
         if (user == null) {
             throw new UserNotFoundException(String.format("ID[%s] not found", id));
         }
 
-        return user;
+        // HATEOAS
+        // "all-users", SERVER_PATH + "/users"
+        // retieveAllUsers
+        final EntityModel<User> model = EntityModel.of(user);
+        WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(                        // 어떤 링크를 추가할지
+                WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());    // methodOn은 현재 클래스에 있는 retrieveAllUsers()를 추가하겠다는 것.
+        model.add(linkTo.withRel("all-users"));                                     // all-users라는 url과 연결을 시킨다.
+
+        return model;   // 위에서 만든 링크를 클라이언트에게 반환한다.
     }
 
     @PostMapping("/users")
