@@ -40,8 +40,8 @@ public class AdminUserController {
 
    // @GetMapping("/v1/users/{id}")     //url을 이용한 버전 관리
    // @GetMapping(value = "/users/{id}/", params = "version=1") // 파라미터를 이용한 버전 관리
-   // @GetMapping(value = "/users/{id}", headers = "X-API-VERSION=1") // 헤더 이용한 버전 관리
-    @GetMapping(value = "/users/{id}", produces = "application/vnd.company.apply1+json") // MIME TYPE을 이용한 버전관리
+    @GetMapping(value = "/users/{id}", headers = "X-API-VERSION=1") // 헤더 이용한 버전 관리
+   // @GetMapping(value = "/users/{id}", produces = "application/vnd.company.apply1+json") // MIME TYPE을 이용한 버전관리
     public MappingJacksonValue retrieveUserV1(@PathVariable int id) {
         User user = service.findOne(id);
 
