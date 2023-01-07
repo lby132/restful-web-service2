@@ -11,4 +11,5 @@ public class HelloWorldBean {
 
     private String message;
 
+    private String name;
 }
